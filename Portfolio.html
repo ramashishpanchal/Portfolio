@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ashish Panchal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#06090f;
+  --bg2:#0a0f1a;
+  --bg3:#0f1522;
+  --card:#111827;
+  --card2:#151f30;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.11);
+  --green:#00ff88;
+  --green-dim:rgba(0,255,136,0.08);
+  --purple:#a855f7;
+  --purple-dim:rgba(168,85,247,0.1);
+  --cyan:#22d3ee;
+  --cyan-dim:rgba(34,211,238,0.08);
+  --orange:#fb923c;
+  --orange-dim:rgba(251,146,60,0.1);
+  --text:#eef2ff;
+  --muted:#a4b5d4;
+  --dim:#6494ed;
+  --font:'Space Grotesk',sans-serif;
+  --mono:'Fira Code',monospace;
+  --r:14px;
+  --r-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+/* CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,9,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:var(--mono);font-size:13px;color:var(--green);letter-spacing:0.05em}
+.nav-brand span{color:var(--muted)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite;margin-right:6px;display:inline-block;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+main{position:relative;z-index:1}
+section{padding:100px 6%}
+.inner{max-width:1100px;margin:0 auto}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:60px}
+.hero-wrap{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center}
+
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,255,136,0.2);border-radius:99px;padding:5px 14px;margin-bottom:1.8rem}
+.hero-name{font-size:clamp(38px,5.5vw,64px);font-weight:700;line-height:1.05;letter-spacing:-0.03em;margin-bottom:.5rem}
+.hero-name .first{color:var(--text)}
+.hero-name .last{background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title{font-family:var(--mono);font-size:14px;color:var(--muted);margin-bottom:1.5rem;letter-spacing:0.02em}
+#typed{color:var(--cyan)}
+.cursor{display:inline-block;width:2px;height:.9em;background:var(--cyan);margin-left:2px;vertical-align:text-bottom;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-desc{font-size:15px;color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:2rem}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2.5rem}
+.badge{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;border:1px solid}
+.badge.g{color:var(--green);border-color:rgba(0,255,136,.3);background:var(--green-dim)}
+.badge.p{color:var(--purple);border-color:rgba(168,85,247,.3);background:var(--purple-dim)}
+.badge.c{color:var(--cyan);border-color:rgba(34,211,238,.3);background:var(--cyan-dim)}
+.hero-btns{display:flex;gap:12px}
+.btn-main{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;padding:12px 26px;background:var(--green);color:#06090f;border:none;border-radius:var(--r-sm);cursor:pointer;text-decoration:none;font-weight:600;transition:.2s;display:inline-block}
+.btn-main:hover{opacity:.85;transform:translateY(-2px)}
+.btn-sec{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;padding:12px 26px;background:transparent;color:var(--text);border:1px solid var(--border2);border-radius:var(--r-sm);text-decoration:none;transition:.2s;display:inline-block}
+.btn-sec:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+
+/* Terminal card */
+.term{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;font-family:var(--mono)}
+.term-head{display:flex;align-items:center;gap:6px;padding:11px 16px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g2{background:#28c840}
+.term-fname{color:var(--dim);font-size:11px;margin-left:8px}
+.term-body{padding:18px 20px;line-height:2;font-size:12.5px}
+.l{display:block}.pr{color:var(--green)}.cm{color:var(--text)}.op{padding-left:16px;color:var(--muted)}.kw{color:var(--purple)}.vl{color:var(--cyan)}.hl{color:var(--orange)}.dm{color:var(--dim)}
+
+/* SECTION LABEL */
+.slabel{font-family:var(--mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.slabel::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border2),transparent)}
+.stitle{font-size:clamp(26px,3.5vw,38px);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:.9rem}
+.ssub{font-size:15px;color:var(--muted);max-width:500px;margin-bottom:3rem;line-height:1.75}
+
+/* ABOUT */
+#about{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:4rem;align-items:start}
+.avatar-block{display:flex;flex-direction:column;gap:14px}
+.avatar{width:100%;max-width:300px;aspect-ratio:1;border-radius:var(--r);background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.avatar::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(0,255,136,.06),transparent 65%)}
+.avatar-text{font-size:72px;font-weight:700;letter-spacing:-0.05em;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:300px}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 10px;text-align:center}
+.stat-n{font-size:22px;font-weight:700;color:var(--green);line-height:1}
+.stat-l{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.about-right p{font-size:15px;color:var(--muted);margin-bottom:1.1rem;line-height:1.8}
+.about-right strong{color:var(--text);font-weight:500}
+.pill{font-family:var(--mono);font-size:10px;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,255,136,.2);border-radius:99px;padding:2px 10px;display:inline-block;margin:2px}
+
+/* EXPERIENCE */
+#experience{}
+.exp-timeline{display:flex;flex-direction:column;gap:0}
+.exp-item{display:grid;grid-template-columns:180px 1fr;gap:2rem;position:relative}
+.exp-item+.exp-item{border-top:1px solid var(--border);padding-top:2rem;margin-top:2rem}
+.exp-left{text-align:right;padding-top:4px}
+.exp-date{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.05em;line-height:1.6}
+.exp-org{font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.12em;margin-top:6px}
+.exp-type{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px}
+.exp-title{font-size:17px;font-weight:600;margin-bottom:12px;letter-spacing:-.01em}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:8px}
+.exp-bullets li{font-size:14px;color:var(--muted);line-height:1.7;padding-left:16px;position:relative}
+.exp-bullets li::before{content:'▹';color:var(--green);position:absolute;left:0;font-size:12px;top:2px}
+.exp-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.exp-tag{font-family:var(--mono);font-size:10px;padding:3px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--dim);letter-spacing:.05em}
+
+/* SKILLS */
+#skills{background:var(--bg2)}
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:2.5rem}
+.scat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px}
+.scat-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.scat-sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px}
+.sbar{margin-bottom:12px}
+.sbar-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:5px}
+.sbar-pct{color:var(--dim)}
+.sbar-bg{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:99px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.f-green{background:var(--green)}.f-purple{background:var(--purple)}.f-cyan{background:var(--cyan)}.f-orange{background:var(--orange)}
+.tools-label{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+.tools-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.tool{font-family:var(--mono);font-size:11px;padding:5px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--muted);letter-spacing:.04em;transition:.2s}
+.tool:hover{border-color:var(--border2);color:var(--text)}
+
+/* PROJECTS */
+#projects{}
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;gap:14px;transition:.25s;text-decoration:none;color:inherit}
+.pcard:hover{border-color:var(--border2);transform:translateY(-4px)}
+.pcard.feat{grid-column:1/-1;display:grid;grid-template-columns:1fr .9fr;gap:2.5rem;align-items:center}
+.ptop{display:flex;align-items:flex-start;justify-content:space-between}
+.picon{width:46px;height:46px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.picon.g{background:var(--green-dim)}.picon.p{background:var(--purple-dim)}.picon.c{background:var(--cyan-dim)}.picon.o{background:var(--orange-dim)}
+.parrow{color:var(--dim);font-size:18px;transition:.2s}
+.pcard:hover .parrow{color:var(--green);transform:translate(2px,-2px)}
+.pname{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.pdesc{font-size:13.5px;color:var(--muted);line-height:1.7}
+.ptags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.ptag{font-family:var(--mono);font-size:10px;padding:3px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:99px;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.acc-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--green);background:var(--green-dim);border:1px solid rgba(0,255,136,.2);border-radius:var(--r-sm);padding:4px 12px;margin-bottom:14px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.met{text-align:center;background:var(--bg3);border-radius:var(--r-sm);padding:12px 8px}
+.met-v{font-size:20px;font-weight:700;color:var(--green);line-height:1}
+.met-l{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+
+/* ACHIEVEMENTS */
+#achievements{background:var(--bg2)}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.acard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:10px;transition:.2s}
+.acard:hover{border-color:var(--border2)}
+.aicon{font-size:28px;line-height:1}
+.atitle{font-size:14px;font-weight:600;line-height:1.3}
+.adesc{font-size:12.5px;color:var(--muted);line-height:1.6}
+.atype{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-top:auto}
+.atype.g{color:var(--green)}.atype.p{color:var(--purple)}.atype.c{color:var(--cyan)}.atype.o{color:var(--orange)}
+
+/* EDUCATION */
+#education{}
+.edu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center}
+.edu-degree{font-size:18px;font-weight:600;letter-spacing:-.01em;margin-bottom:4px}
+.edu-school{font-size:14px;color:var(--muted);margin-bottom:12px}
+.edu-yr{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.05em;text-align:right}
+.edu-badge{font-family:var(--mono);font-size:10px;padding:4px 12px;background:var(--purple-dim);border:1px solid rgba(168,85,247,.25);border-radius:99px;color:var(--purple);letter-spacing:.08em;text-transform:uppercase;margin-top:8px;display:inline-block}
+.focus-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.ftag{font-family:var(--mono);font-size:10px;padding:3px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--dim);letter-spacing:.04em}
+
+/* CONTACT */
+#contact{background:var(--bg2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.cinfo p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:1.8rem}
+.clinks{display:flex;flex-direction:column;gap:10px}
+.clink{display:flex;align-items:center;gap:14px;padding:13px 18px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);text-decoration:none;color:var(--muted);font-family:var(--mono);font-size:12px;transition:.2s}
+.clink:hover{border-color:var(--border2);color:var(--text)}
+.clink-icon{color:var(--green);width:16px;text-align:center;font-size:15px}
+.cform{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px}
+.fg{display:flex;flex-direction:column;gap:7px}
+.flabel{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.finput,.ftextarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 14px;color:var(--text);font-family:var(--font);font-size:14px;outline:none;transition:.2s;resize:none;width:100%}
+.finput:focus,.ftextarea:focus{border-color:var(--green)}
+.finput::placeholder,.ftextarea::placeholder{color:var(--dim)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1.8rem 6%;display:flex;align-items:center;justify-content:space-between}
+.footer-l{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.footer-l span{color:var(--green)}
+.footer-r{font-family:var(--mono);font-size:10px;color:var(--dim)}
+
+/* ANIMS */
+.fu{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.fu.vis{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .hero-wrap,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .skills-grid,.projects-grid,.ach-grid{grid-template-columns:1fr}
+  .pcard.feat{grid-column:1;display:flex;flex-direction:column}
+  .exp-item{grid-template-columns:1fr}
+  .exp-left{text-align:left}
+  .nav-links{display:none}
+  .metrics{grid-template-columns:1fr 1fr}
+  .edu-card{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <div class="nav-brand"><span class="nav-dot"></span>ashish_panchal<span>.py</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-wrap">
+    <div class="fu">
+      <div class="chip">🚀 Open to Opportunities</div>
+      <h1 class="hero-name">
+        <span class="last">Ashish Panchal</span><br/>
+        
+      </h1>
+      <p class="hero-title">// <span id="typed"></span><span class="cursor"></span></p>
+      <p class="hero-desc">B.Tech AI/ML student who works the full data lifecycle — analysis, statistical modeling, dashboards, and ML systems — shipped end-to-end.</p>
+      
+      <div class="hero-btns">
+        <a href="#projects" class="btn-main">View Projects</a>
+        <a href="#contact" class="btn-sec">Contact Me</a>
+      </div>
+    </div>
+
+    <div class="term fu" style="transition-delay:.2s">
+      <div class="term-head">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g2"></div>
+        <span class="term-fname">ashish_profile.py</span>
+      </div>
+      <div class="term-body">
+        <span class="l"><span class="pr">❯</span> <span class="cm">python</span> <span class="kw">profile.py</span> <span class="dm">--verbose</span></span>
+        <span class="l"><span class="op"><span class="dm"># Initializing profile...</span></span></span>
+        <span class="l"><span class="op"><span class="kw">name</span>  : <span class="vl">"Ashish Panchal"</span></span></span>
+        <span class="l"><span class="op"><span class="kw">role</span>  : <span class="vl">"Data Analyst"</span></span></span>
+        <span class="l"><span class="op"><span class="kw">base</span>  : <span class="vl">"Gurugram, India"</span></span></span>
+        <span class="l"><span class="op"><span class="kw">edu</span>   : <span class="vl">"B.Tech CSE (AI/ML) @ MDU"</span></span></span>
+        <span class="l"><span class="op"><span class="kw">focus</span> : [</span></span>
+        <span class="l"><span class="op">&nbsp;&nbsp;<span class="hl">"Data Wrangling & Analysis"</span>,</span></span>
+        <span class="l"><span class="op">&nbsp;&nbsp;<span class="hl">"Statistical Testing"</span>,</span></span>
+        <span class="l"><span class="op">&nbsp;&nbsp;<span class="hl">"Dashboard Development"</span>,</span></span>
+        <span class="l"><span class="op">&nbsp;&nbsp;<span class="hl">"Model Evaluation & Validation"</span></span></span>
+        <span class="l"><span class="op">]</span></span>
+        <span class="l"><span class="op"><span class="kw">kaggle_rank</span> : <span class="vl">607 / 4082</span> <span class="dm">🏆</span></span></span>
+        <span class="l"><span class="op"><span class="kw">leetcode</span>    : <span class="vl">200+ problems</span></span></span>
+        <span class="l"><span class="op"><span class="kw">status</span>      : <span style="color:var(--green)">"Available"</span></span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="inner">
+    <div class="slabel">01 — About</div>
+    <div class="about-grid">
+      <div class="fu">
+        <div class="avatar-block">
+          <div class="avatar"><img src="Ashish profile.jpeg" alt="AP" style="width: 100%; height: 100%; object-fit: contain;"></div>
+          <div class="stats-row">
+            <div class="stat"><div class="stat-n">1</div><div class="stat-l">Hackathon Runner-Up</div></div>
+            <div class="stat"><div class="stat-n">3+</div><div class="stat-l">Projects</div></div>
+            <div class="stat"><div class="stat-n">1</div><div class="stat-l">Internship</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-right fu" style="transition-delay:.15s">
+        <h2 class="stitle">From Messy Data to Working Systems</h2>
+        
+        <p>My foundation is in data analysis — cleaning and merging datasets, running SQL queries to answer real business questions, validating findings with Statistical Testing and confidence intervals, and building Dashboard Development work in Power BI that stakeholders can actually act on. From there, I've gone deeper into data science and ML: Model Evaluation & Validation, hyperparameter tuning, and shipping projects spanning computer vision, natural language processing, and Transformer architectures — deployed end-to-end with Docker and AWS.</p>
+        <p>I'm currently pursuing my <strong>B.Tech in CSE (AI & ML)</strong> and am actively looking for opportunities where I can build, ship, and grow in the world of data.</p>
+        <div style="margin-top:1.2rem">
+          <span class="pill">Power BI</span>
+          <span class="pill">SQL</span>
+          <span class="pill">Scikit-Learn</span>
+          <span class="pill">FastAPI</span>
+          <span class="pill">Data Analysis</span>
+          <span class="pill">TensorFlow</span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="inner">
+    <div class="slabel">02 — Experience</div>
+    <h2 class="stitle fu">Where I've Worked</h2>
+    <p class="ssub fu">Hands-on roles focused on the full ML lifecycle — from data to deployment.</p>
+
+    <div class="exp-timeline">
+      <!-- TechDremity -->
+      <div class="exp-item fu">
+        <div class="exp-left">
+          <div class="exp-date">Jul 2025 – Nov 2025</div>
+          <div class="exp-org">TechDremity</div>
+          <div class="exp-type">Remote</div>
+        </div>
+        <div>
+          <div class="exp-title">AIML Developer</div>
+          <ul class="exp-bullets">
+            <li>Designed, trained, and deployed deep learning models covering the complete ML workflow — from data preprocessing through to production deployment.</li>
+            <li>Performed dataset cleaning, augmentation, and annotation to improve model accuracy and reduce overfitting across computer vision tasks.</li>
+            <li>Optimised models by tuning hyperparameters, debugging performance bottlenecks, and improving inference speed for real-time applications.</li>
+            <li>Collaborated via Git/GitHub in a remote team environment, working with TensorFlow, Keras, Scikit-Learn, and OpenCV.</li>
+          </ul>
+          <div class="exp-tags">
+            <span class="exp-tag">TensorFlow</span><span class="exp-tag">Keras</span><span class="exp-tag">Scikit-Learn</span>
+            <span class="exp-tag">OpenCV</span><span class="exp-tag">Git/GitHub</span><span class="exp-tag">Python</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Samsung Innovation Campus -->
+      <div class="exp-item fu" style="transition-delay:.1s">
+        <div class="exp-left">
+          <div class="exp-date">Dec 2025 – Feb 2026</div>
+          <div class="exp-org">Samsung Innovation Campus</div>
+          <div class="exp-type">Trainee</div>
+        </div>
+        <div>
+          <div class="exp-title">Training Program — Coding & Programming</div>
+          <ul class="exp-bullets">
+            <li>Completed an intensive 3-month program focused on programming fundamentals, data manipulation, and EDA.</li>
+            <li>Developed <strong style="color:var(--text)">AgriGuard</strong> — an ML-based solution that analyses orchard data to detect risks early and help farmers reduce economic losses.</li>
+            <li>Earned Runner-Up honours at the Samsung Innovation Campus Hackathon among competing teams.</li>
+          </ul>
+          <div class="exp-tags">
+            <span class="exp-tag">Machine Learning</span><span class="exp-tag">EDA</span>
+            <span class="exp-tag">Data Visualization</span><span class="exp-tag">Predictive Modeling</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="inner">
+    <div class="slabel">03 — Projects</div>
+    <h2 class="stitle fu">Things I've Built</h2>
+    <p class="ssub fu">Real models, real datasets, real deployments.</p>
+
+    <div class="projects-grid">
+
+      <!--Vendor Performance Analysis-->
+    <div class="pcard fu" style="transition-delay:.2s">
+      <div class="ptop">
+        <div class="picon" style="background:var(--orange-dim);font-size:22px">📉</div>
+          <a href="https://github.com/ramashishpanchal/Vendor-Performance-Data-Analysis/" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+      </div>
+      <div class="pname">Vendor Performance Analysis</div>
+      <p class="pdesc">
+        Merged 4 source files into one unified table, then evaluated vendor and brand performance —
+        sales contribution, profit margins, bulk-pricing effects, inventory turnover — and confirmed the
+        gap between top and low performers with a formal hypothesis test.
+      </p>
+      <div class="ptags">
+        <span class="ptag"><b>10,692+</b> records</span>
+        <span class="ptag">t = <b>-10.71</b>, p &lt; <b>0.0001</b></span>
+        <span class="ptag">95% confidence intervals on margin</span>
+        <span class="ptag">Python</span>
+        <span class="ptag">Power BI</span>
+        <span class="ptag">MySQL</span>
+      </div>
+    </div>
+
+
+
+      <!--Customer Behaviour Analysis-->
+  
+ 
+    <div class="pcard fu" style="transition-delay:.2s">
+      <div class="ptop">
+        <div class="picon" style="background:var(--orange-dim);font-size:22px">📈</div>
+          <a href="https://github.com/ramashishpanchal/Customer-Shoping-Behaviour/" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+      </div>
+      <div class="pname">Customer Shopping Behavior Analysis</div>
+      <p class="pdesc">
+        Cleaned and engineered features across a full retail transaction set, then moved the pipeline into
+        MySQL to answer revenue, segmentation, and discount-behavior questions — surfaced through a Power BI
+        dashboard built for business decision-making.
+      </p>
+      <div class="ptags">
+        <span class="ptag"><b>3,900+</b> records</span>
+        <span class="ptag"><b>18</b> features</span>
+        <span class="ptag"><b>10+</b> business questions answered</span>
+        <span class="ptag">Python</span>
+        <span class="ptag">Power BI</span>
+        <span class="ptag">MySQL</span>
+      </div>
+    </div>
+    
+      <!-- Featured: Face Mask Detection -->
+      <div class="pcard fu">
+        <div>
+          <div class="ptop" style="margin-bottom:14px">
+            <div class="picon g">🎭</div>
+            <a href="https://github.com/ramashishpanchal/face-mask-detection" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+          </div>
+          <div class="acc-badge">✅ 99% Validation Accuracy</div>
+          <div class="pname">Face Mask Detection System</div>
+          <p class="pdesc" style="margin-top:8px">Built a deep learning–based face mask detection model using transfer learning with ResNet50. Performed dataset preprocessing and augmentation to reduce overfitting. Integrated the trained model into a Streamlit web app, containerised it with Docker, and deployed live on AWS — full production pipeline.</p>
+          <div class="ptags" style="margin-top:16px">
+            <span class="ptag">ResNet50</span><span class="ptag">Transfer Learning</span>
+            <span class="ptag">TensorFlow</span><span class="ptag">Streamlit</span>
+            <span class="ptag">Docker</span><span class="ptag">AWS</span><span class="ptag">OpenCV</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Caption Generator -->
+      <div class="pcard fu" style="transition-delay:.1s">
+        <div class="ptop">
+          <div class="picon p">🖼️</div>
+          <a href="https://github.com/ramashishpanchal/Image-Caption-Generator/" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+        </div>
+        <div class="pname">Image Caption Generator</div>
+        <p class="pdesc">End-to-end image captioning with CNN-based feature extraction paired with LSTM, Bidirectional LSTM, and Stacked LSTM. Upgraded to a CNN + Transformer encoder-decoder for superior long-range dependency. Tokenized using tiktoken. Deployed via web interface, containerised with Docker.</p>
+        <div class="ptags">
+          <span class="ptag">CNN</span><span class="ptag">LSTM</span><span class="ptag">Transformers</span>
+          <span class="ptag">tiktoken</span><span class="ptag">Docker</span><span class="ptag">TensorFlow</span>
+        </div>
+      </div>
+
+      <!-- Transformer Chatbot -->
+      <div class="pcard fu" style="transition-delay:.15s">
+        <div class="ptop">
+          <div class="picon c">🤖</div>
+          <a href="https://github.com/ramashishpanchal/Transformer-based-chatbot-from-scratch/" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+        </div>
+        <div class="pname">Transformer Chatbot (From Scratch)</div>
+        <p class="pdesc">Custom Transformer architecture built entirely from scratch in TensorFlow — multi-head attention, positional encoding, encoder-decoder structure. Trained on Convokit and movie dialogue corpus. Implemented Beam Search decoding for coherent, context-aware responses.</p>
+        <div class="ptags">
+          <span class="ptag">Transformer</span><span class="ptag">Multi-Head Attention</span>
+          <span class="ptag">TensorFlow</span><span class="ptag">Beam Search</span><span class="ptag">NLP</span>
+        </div>
+      </div>
+
+      <!-- AgriGuard -->
+      <div class="pcard fu" style="transition-delay:.2s">
+        <div class="ptop">
+          <div class="picon" style="background:var(--orange-dim);font-size:22px">🌾</div>
+          <a href="https://www.kaggle.com/code/ramashishpanchal/sic-hackathon-prototype/" target="_blank" class="parrow" style="text-decoration: none;">↗</a>
+        </div>
+        <div class="pname">AgriGuard — ML for Agriculture</div>
+        <p class="pdesc">ML-based solution built at Samsung Innovation Campus that analyses orchard data to detect risks early, helping farmers reduce economic losses. Earned Runner-Up at the SIC Hackathon among competing teams.</p>
+        <div class="ptags">
+          <span class="ptag">Machine Learning</span><span class="ptag">EDA</span>
+          <span class="ptag">Predictive Modeling</span><span class="ptag">Samsung SIC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    
+  
+
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="inner">
+    <div class="slabel">04 — Achievements</div>
+    <h2 class="stitle fu">Recognition & Certifications</h2>
+    <p class="ssub fu">Competitions, certifications, and coding milestones.</p>
+
+    <div class="ach-grid">
+      <div class="acard fu">
+        <div class="aicon">🏆</div>
+        <div class="atitle">Runner-Up — Samsung Innovation Campus Hackathon</div>
+        <div class="adesc">Competed and placed 2nd with AgriGuard, an ML-based early-risk detection system for orchard farmers.</div>
+        <div class="atype o">Hackathon</div>
+      </div>
+
+      <div class="acard fu" style="transition-delay:.2s">
+        <div class="aicon">🎯</div>
+        <div class="atitle">Kreativan Technologies Certified — Business Analytics </div>
+        <div class="adesc">Certified by Kreativan Technologies.</div>
+        <div class="atype p">Certification</div>
+      </div>
+
+      <div class="acard fu" style="transition-delay:.15s">
+        <div class="aicon">📌</div>
+        <div class="atitle">CollegeDunia Certified — Data Science & Engineering</div>
+        <div class="adesc">Certified by CollegeDunia.</div>
+        <div class="atype c">Certification</div>
+      </div>
+
+      <div class="acard fu" style="transition-delay:.25s">
+        <div class="aicon">🎓</div>
+        <div class="atitle">HackerRank Certified — Python, SQL & Problem Solving</div>
+        <div class="adesc">Earned verified certifications from HackerRank in Python programming, SQL querying, and algorithmic problem solving.</div>
+        <div class="atype g">Certification</div>
+      </div>
+
+      <div class="acard fu" style="transition-delay:.05s">
+        <div class="aicon">📊</div>
+        <div class="atitle">Kaggle: 607 / 4,082 — Road Accident Risk Prediction</div>
+        <div class="adesc">Ranked in the top 15% of participants in Kaggle Playground Series competition on predicting road accident risk.</div>
+        <div class="atype g">Kaggle Competition</div>
+      </div>
+
+      <div class="acard fu" style="transition-delay:.1s">
+        <div class="aicon">📈</div>
+        <div class="atitle">Kaggle: 683 / 4,142 — Customer Churn Prediction</div>
+        <div class="adesc">Placed in the top 17% of participants in Kaggle Playground Series competition on predicting customer churn.</div>
+        <div class="atype g">Kaggle Competition</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="inner">
+    <div class="slabel">05 — Education</div>
+    <h2 class="stitle fu">Academic Background</h2>
+    <div style="margin-top:2rem" class="fu">
+      <div class="edu-card">
+        <div>
+          <div class="edu-degree">B.Tech in Computer Science & Engineering</div>
+          <div class="edu-school">Maharshi Dayanand University (MDU), Rohtak</div>
+          
+          <span class="edu-badge">Specialisation: AI & ML</span>
+        </div>
+        <div>
+          <div class="edu-yr">Aug 2023 – Present</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="inner">
+    <div class="slabel">06 — Contact</div>
+    <div class="contact-grid">
+      <div class="cinfo fu">
+        <h2 class="stitle">Let's Connect</h2>
+        <p>I'm actively looking for AI/ML roles, internships, and collaborative projects. If you're working on something interesting in data analyst, Business analyst roles.</p>
+        <div class="clinks">
+          <a href="mailto:ram.ashishpanchal@gmail.com" class="clink">
+            <span class="clink-icon">✉</span>ram.ashishpanchal@gmail.com
+          </a>
+          <a href="tel:+919958568617" class="clink">
+            <span class="clink-icon">📞</span>+91 99585-68617
+          </a>
+          <a href="https://www.linkedin.com/in/callmeashishpanchal/" target="_blank" class="clink">
+            <span class="clink-icon">in</span>LinkedIn — Ashish Panchal
+          </a>
+          <a href="https://www.kaggle.com/ramashishpanchal" target="_blank" class="clink">
+            <span class="clink-icon">🏅</span>Kaggle — Top 15% Competitor
+          </a>
+          <a href="https://drive.google.com/file/d/17HuW4D0AOewDfntAEbnusJZ6-aw7QwdH/view?usp=drive_link" download="Ashish-Panchal-Resume.pdf" class="clink">
+  <span class="clink-icon">📄</span>Download Resume / CV
+</a>
+        </div>
+      </div>
+      <div class="cform fu" style="transition-delay:.15s">
+        <div class="fg">
+          <label class="flabel">Your Name</label>
+          <input type="text" class="finput" placeholder="e.g. Raghav "/>
+        </div>
+        <div class="fg">
+          <label class="flabel">Email</label>
+          <input type="email" class="finput" placeholder="you@company.com"/>
+        </div>
+        <div class="fg">
+          <label class="flabel">Message</label>
+          <textarea class="ftextarea" rows="5" placeholder="Tell me about the opportunity or project..."></textarea>
+        </div>
+        <button class="btn-main" style="width:100%;text-align:center;cursor:pointer">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-l">© 2026 <span>Ashish Panchal</span> — Crafted with code & curiosity</div>
+  <div class="footer-r">Data Analyst · Business Analyst · Machine Learning · Gurugram, India</div>
+</footer>
+
+<script>
+// Particle network bg
+const cvs = document.getElementById('bg-canvas');
+const ctx = cvs.getContext('2d');
+let W,H,pts=[];
+function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+const COLS=['#00ff88','#22d3ee','#a855f7'];
+for(let i=0;i<55;i++){
+  pts.push({x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,
+    r:Math.random()*1.2+.4,op:Math.random()*.4+.1,
+    col:COLS[Math.floor(Math.random()*COLS.length)]})
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col;ctx.globalAlpha=p.op;ctx.fill();ctx.globalAlpha=1;
+  });
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90){
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle='#00ff88';ctx.globalAlpha=(1-d/90)*.06;ctx.lineWidth=.5;ctx.stroke();ctx.globalAlpha=1;
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Typing effect
+const phrases=['Data Analyst','Business Analyst','Machine Learning Engineer','Data Scientist'];
+let pi=0,ci=0,del=false,el=document.getElementById('typed');
+function type(){
+  const ph=phrases[pi];
+  if(!del){el.textContent=ph.slice(0,ci);ci++;if(ci>ph.length){del=true;setTimeout(type,2000);return;}}
+  else{el.textContent=ph.slice(0,ci);ci--;if(ci<0){del=false;pi=(pi+1)%phrases.length;ci=0;setTimeout(type,300);return;}}
+  setTimeout(type,del?38:65);
+}
+type();
+
+// Scroll fade-up
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});},{threshold:.1});
+document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+
+// Skill bars
+const bObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting)e.target.querySelectorAll('.sbar-fill').forEach(b=>{b.style.width=b.dataset.pct+'%'});
+  });
+},{threshold:.3});
+document.querySelectorAll('.scat').forEach(el=>bObs.observe(el));
+</script>
+</body>
+</html>
